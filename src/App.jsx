@@ -1,12 +1,9 @@
 import Header from "./components/Header"
 import UserInputs from "./components/UserInputs"
 import Results from "./components/Results";
-import { calculateInvestmentResults } from "./util/investment";
 import { useState } from "react";
 
 function App() {
-
-  const [results, setResults] = useState([]);
 
   const [userInputs, setUserInputs] = useState({
     initialInvestment: 0,
@@ -18,32 +15,19 @@ function App() {
   function handleChange(event) {
     const {id, value} = event.target;
 
-    const updatedInputs = {
-      ...userInputs,
-      [id]: +value
-    }
-
-    setUserInputs(updatedInputs);
-
-    handleResults(updatedInputs);
-  }
-
-  function handleResults(updatedInputs) {
-    if(updatedInputs.initialInvestment > 0 && updatedInputs.annualInvestment > 0 && updatedInputs.expectedReturn > 0 && updatedInputs.duration > 0) {
-      const data = calculateInvestmentResults(updatedInputs);
-
-      console.log(data);
-      setResults(data);
-    } else {
-      setResults([]);
-    }
+    setUserInputs((prevInputs) => {
+      return {
+        ...prevInputs,
+        [id]: +value
+      }
+    });
   }
 
   return (
     <>
       <Header />
       <UserInputs handleChange={handleChange} userInputs={userInputs}/>
-      <Results results={results}/>
+      <Results userResults={userInputs}/>
     </>
   );
 }
